@@ -1,0 +1,28 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vuvuyecomm2-dev-212006-authRole",
+      "UnauthRoleArn": "arn:aws:iam::538424728833:role/amplify-vuvuyecomm2-dev-212006-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::538424728833:role/amplify-vuvuyecomm2-dev-212006-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-vuvuyecomm2-dev-212006-deployment",
+      "UnauthRoleName": "amplify-vuvuyecomm2-dev-212006-unauthRole",
+      "StackName": "amplify-vuvuyecomm2-dev-212006",
+      "StackId": "arn:aws:cloudformation:eu-central-1:538424728833:stack/amplify-vuvuyecomm2-dev-212006/f8171590-f52c-11ea-8de8-0a54af97727a",
+      "AmplifyAppId": "d21czbo4ordh0d"
+    },
+    "categories": {
+      "function": {
+        "vuvuyecomm2PostConfirmation": {
+          "GROUP": "Users"
+        }
+      },
+      "auth": {
+        "vuvuyecomm2": {
+          "facebookAppId": "123",
+          "googleClientId": "123"
+        }
+      }
+    }
+  }
+}

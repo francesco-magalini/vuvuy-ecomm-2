@@ -1,0 +1,322 @@
+
+type Currency
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String
+  symbol: String
+}
+
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  )
+  @key(name: "byParty", fields: ["partyId"]){
+  id: ID!
+  partyId: ID!
+  enabled: Boolean
+  party: Party! @connection(fields: ["partyId"])
+}
+
+type Party
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  ){
+  id: ID!
+  firstName: String
+  lastName: String
+  companyName: String
+  companyVat: String
+  email: String
+  logo: String
+  mobile: String
+  addressLine1: String
+  addressLine2: String
+  country: String
+
+}
+
+type Customer
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  )
+{
+  id: ID!
+  party: Party  @connection
+  description: String
+
+  deleted: Boolean
+  visible: Boolean
+  companyName: String
+  companyVat: String
+  firstName: String
+  lastName: String
+}
+
+type Vendor
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  ){
+  id: ID!
+  party: Party!  @connection
+  description: String
+
+  deleted: Boolean
+}
+
+type SalesOrder
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read, create, update, delete] }
+    ]
+  )
+
+  @key(name: "byCustomer", fields: ["customerId"])
+
+  {
+  id: ID!
+
+  customerId: ID!
+
+
+  customer: Customer! @connection(fields:["customerId"]) 
+
+  notes: String
+  salesOrderLines: [SalesOrderLine] @connection(keyName: "bySalesOrder", fields: ["id"])
+  extensions: String
+
+  deleted: Boolean
+}
+
+type SalesOrderLine
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read, create, update, delete] }
+    ]
+  ) 
+  @key(name: "bySalesOrder", fields: ["salesOrderId"])
+  {
+  id: ID!
+  salesOrderId: ID!
+  itemId: ID!
+  salesOrder: SalesOrder! @connection(fields:["salesOrderId"]) 
+  item: Item! @connection(fields:["itemId"]) 
+  price: Float
+  quantity: Int
+  extensions: String
+}
+
+type PurchaseOrder
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  ){
+  id: ID!
+  vendorId: Vendor! @connection
+  number: String
+  deleted: Boolean
+}
+
+type PurchaseOrderLine
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  ){
+  id: ID!
+  purchaseOrder: PurchaseOrder! @connection
+  extensions: String
+}
+
+
+type Item
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  )
+{
+  id: ID!
+  name: String 
+  description: String 
+  itemGroup: [ItemItemGroup] @connection(keyName: "byItem", fields: ["id"])
+  priceList: [ItemPriceList] @connection(keyName: "byItem", fields: ["id"])
+  nextItem: Item @connection
+  prevItem: Item @connection
+  extensions: String
+  deleted: Boolean
+}
+
+type ItemItemGroup
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  )
+  @key(name: "byItem", fields: ["itemId","itemGroupId"])
+  @key(name: "byItemGroup", fields: ["itemGroupId","itemId"])
+
+  {
+  id: ID!
+  itemId: ID!
+  itemGroupId: ID!
+  item: Item! @connection(fields: ["itemId"])
+  itemGroup: ItemGroup! @connection(fields:["itemGroupId"])
+}
+
+type ItemGroup
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  )
+  {
+  id: ID!
+  name: String 
+  description: String 
+  item: [ItemItemGroup] @connection(keyName: "byItemGroup", fields: ["id"])
+  nextItemGroup: ItemGroup @connection
+  prevItemGroup: ItemGroup @connection
+  extensions: String
+
+  deleted: Boolean
+}
+
+type ItemPriceList
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  )
+  @key(name: "byItem", fields: ["itemId","priceListId"])
+  @key(name: "byPriceList", fields: ["priceListId","itemId"])
+  {
+  id: ID!
+  itemId: ID!
+  priceListId: ID!
+  item: Item! @connection(fields: ["itemId"])
+  priceList: PriceList! @connection(fields:["priceListId"])
+  currency: Currency @connection
+  price: Float
+  deleted: Boolean
+}
+
+type PriceList
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+      { allow: public, provider: iam, operations: [read] }
+    ]
+  )
+{
+  id: ID!
+  name: String
+  item: [ItemPriceList] @connection(keyName: "byPriceList", fields: ["id"])
+  extensions: String
+  deleted: Boolean
+  visible: Boolean
+}
+
+
+type SalesInvoice
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  ) 
+  @key(name: "byCustomer", fields: ["customerId"]){
+  id: ID!
+  customerId: ID!
+  number: String
+  date: String
+  customer: Customer! @connection(fields: ["customerId"])
+  salesInvoiceLines: [SalesInvoiceLine]
+  extensions: String
+  status: Int
+}
+
+
+type SalesInvoiceLine
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: groups, groups: ["Users"] }
+    ]
+  ) 
+ {
+  id: ID!
+  salesInvoiceId: ID!
+  salesInvoice: SalesInvoice! @connection(fields:["salesInvoiceId"]) 
+  percentageDiscount: Float
+  item: Item @connection
+  price: Float
+  quantity: Int
+  extensions: String
+}
