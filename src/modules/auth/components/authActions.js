@@ -10,7 +10,7 @@ import {
   REGISTER_USER_ERROR,
   FORGOT_PASSWORD,
   FORGOT_PASSWORD_CONFIRM,
-  AUTH_ERROR } from '../types/types';
+  AUTH_ERROR } from '../redux/types/types';
 
 
 export function authError(error) {
@@ -42,10 +42,10 @@ export function login({ username, password }, history) {
           dispatch({ type: AUTH_MFA, payload: data});
         } else {
           // dispatch AUTH_USER
-          dispatch({ type: AUTH_USER, payload: data });
+          dispatch({ type: AUTH_USER });
 
           // we have authenticated, lets navigate to /main route
-          history.push('/');
+          history.push('/account');
         }
       })
       .catch(err => {
@@ -76,10 +76,12 @@ export function validateUserSession() {
             // otherwise, dispatch AUTH_USER success action and by-pass login screen
             if (session.isValid()) {
               // fire user is authenticated
+              console.log('fire user is authenticated')
               dispatch({ type: AUTH_USER });
               //history.push('/');
             } else {
               // fire user is unauthenticated
+              console.log('fire user is unauthenticated')
               dispatch({ type: UNAUTH_USER });
               //history.push('/');
             }
@@ -117,7 +119,7 @@ export function setNewPassword( { cognitoUser, newPassword }, history ) {
           dispatch({ type: AUTH_MFA, payload: data});
         } else {
           // dispatch AUTH_USER
-          dispatch({ type: AUTH_USER, payload: data });
+          dispatch({ type: AUTH_USER });
 
           // we have authenticated, lets navigate to /main route
           history.push('/');
@@ -167,7 +169,7 @@ export function confirmLogin( { cognitoUser, code }, history ) {
         console.log('actions.confirmLogin():Auth.confirmSignIn() data: ', data);
 
         // dispatch AUTH_USER
-        dispatch({ type: AUTH_USER, payload: data });
+        dispatch({ type: AUTH_USER });
 
         // we have authenticated, lets navigate to /main route
         history.push('/');

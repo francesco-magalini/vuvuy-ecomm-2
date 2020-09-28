@@ -15,4 +15,3 @@ export const AUTH_ERROR_CLEAR = 'auth_error_clear';
 export const REQRES_FETCH_ALL_SUCCESS = 'reqres_fetch_all_success';
 export const REQRES_CREATE_SUCCESS = 'reqres_create_success';
 export const REQRES_ERROR = 'reqres_error';
-export const HYDRATE_USER = 'hydrate_user';

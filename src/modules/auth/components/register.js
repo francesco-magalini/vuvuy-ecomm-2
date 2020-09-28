@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Field, reduxForm } from "../redux/node_modules/redux-form";
+import { Field, reduxForm } from "redux-form";
 import { Form } from "semantic-ui-react";
-import { InputField } from "../partials/form_controls";
-import { Link } from "react-router-dom";
+import { InputField } from "../components/form_controls";
 import PropTypes from "prop-types";
+import { FormattedMessage, injectIntl } from "react-intl";
+
 import {
   register as registerAction,
   confirmRegistration as confirmRegistrationAction,
   resendConfirmationCode as resendCodeAction,
-} from "../redux/actions/authActions";
-import store from "../../../../redux/store";
+} from "./authActions";
+import store from "../../../redux/store";
 import { AUTH_ERROR_CLEAR } from "../redux/types/types";
-import { FormattedMessage, injectIntl } from "react-intl";
 
 class Register extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Register extends Component {
     }, 1000);
   };
 
-  onFormSubmit({ email, password, code }) {
+  onFormSubmit({ username, password, code }) {
     const { mfaRequired, resendCode } = this.props;
 
     if (
@@ -41,10 +41,7 @@ class Register extends Component {
       (typeof resendCode === "undefined" || resendCode === false)
     ) {
       // we pass in the history function so we can navigate from loginAction
-      this.props.registerAction(
-        { email, password },
-        this.props.history
-      );
+      this.props.registerAction({ username, password }, this.props.history);
     } else if (
       mfaRequired === true &&
       (typeof resendCode === "undefined" || resendCode === false)
@@ -79,126 +76,145 @@ class Register extends Component {
       handleSubmit,
       mfaRequired,
       resendCode,
-      fields: { email, password }, // eslint-disable-line
+      fields: { username, password }, // eslint-disable-line
     } = this.props;
+
     const invalidRegistration = this.renderAlert();
 
     return (
-      <div className="register-page">
-        {invalidRegistration && (
-          <div
-            role="alert"
-            className="mb-10 alert alert-custom alert-light-info alert-dismissible"
-          >
-            <div className="alert-text ">
-              {invalidRegistration}
-            </div>
-          </div>
-        )}
 
-        {!mfaRequired && (
-          <Form onSubmit={handleSubmit(this.onFormSubmit.bind(this))}>
-            <div className="fill-in">
-              <Field
-                name="email"
-                component={InputField}
-                label={this.props.intl.formatMessage({ id: "SERVICE.EMAIL" })}
-                className="form-control form-control-solid h-auto py-5 px-6"
-                type="email"
-                placeholder={this.props.intl.formatMessage({ id: "SERVICE.EMAIL" })}
-              />
-              {/* <Field
-                name="username"
-                component={InputField}
-                label={{ content: <Icon color="orange" name="user" size="large" /> }}
-                labelPosition="left"
-                type="text"
-                placeholder="Enter username" /> */}
-              <Field
-                name="password"
-                component={InputField}
-                label={this.props.intl.formatMessage({ id: "SERVICE.PASSWORD" })}
-                className="form-control form-control-solid h-auto py-5 px-6"
-                /* label={{
-                  content: <Icon color="orange" name="lock" size="large" />,
-                }}
-                labelPosition="left" */
-                type="password"
-                placeholder={this.props.intl.formatMessage({ id: "SERVICE.PASSWORD" })}
-              />
 
-              {/* <Field
-                name="phone"
-                component={InputField}
-                label={{ content: <Icon color="orange" name="phone" size="large" /> }}
-                labelPosition="left"
-                type="phone"
-              placeholder="Enter phone number" /> */}
-              <div className="form-group d-flex flex-wrap flex-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
-                >
-                  <span>
-                    <FormattedMessage id="SERVICE.SUBMIT" />
-                  </span>
-                </button>
-
-                <Link to="/auth/login">
-                  <button
-                    type="button"
-                    className="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-4"
-                  >
-                    <FormattedMessage id="SERVICE.CANCEL" />
-                  </button>
-                </Link>
+          <main className="main">
+            <nav aria-label="breadcrumb" className="breadcrumb-nav">
+              <div className="container">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <a href="index.html">
+                      <i className="icon-home" />
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Login
+                  </li>
+                </ol>
               </div>
+              {/* End .container */}
+            </nav>
+            <div className="page-header">
+              <div className="container">
+                <h1>
+                  <FormattedMessage id="AUTH.REGISTER.TITLE" />
+                </h1>
+              </div>
+              {/* End .container */}
             </div>
-          </Form>
-        )}
+            {/* End .page-header */}
+            <div className="container">
+              <div className="login-form login-signin">
+                {/* begin::Head */}
+                <div className="text-center mb-10 mb-lg-20">
+                  {/* https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage */}
+                  <h3 className="font-size-h1">
+                    <FormattedMessage id="AUTH.REGISTER.TITLE" />
+                  </h3>
+                  <p className="text-muted font-weight-bold">
+                    <FormattedMessage id="AUTH.REGISTER.TITLE" />
+                  </p>
+                </div>
+                {/* end::Head */}
 
-        {mfaRequired && (
-          <Form onSubmit={handleSubmit(this.onFormSubmit.bind(this))}>
-            <div className="fill-in">
-              <Field
-                name="code"
-                component={InputField}
-                label={this.props.intl.formatMessage({ id: "SERVICE.AUTH.VERIFICATION_CODE" })}
-                type="text"
-                className="form-control form-control-solid h-auto py-5 px-6"
-                placeholder={this.props.intl.formatMessage({ id: "SERVICE.AUTH.VERIFICATION_CODE" })}
-              />
-
-              <div className="form-group d-flex flex-wrap flex-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
-                >
-                  <span>
-                    <FormattedMessage id="SERVICE.AUTH.VERIFY" />
-                  </span>
-                </button>
-
-                {resendCode && (
-                  <button
-                    type="submit"
-                    className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
+                {invalidRegistration && (
+                  <div
+                    role="alert"
+                    className="mb-10 alert alert-custom alert-light-info alert-dismissible"
                   >
-                    <span>
-                      <FormattedMessage id="SERVICE.AUTH.RESEND_CODE" />
-                    </span>
-                  </button>
+                    <div>{invalidRegistration}</div>
+                  </div>
+                )}
+
+                {!mfaRequired && (
+                  <Form onSubmit={handleSubmit(this.onFormSubmit.bind(this))}>
+                    <div>
+                      <Field
+                        autoComplete="username"
+                        name="username"
+                        component={InputField}
+                        label={this.props.intl.formatMessage({
+                          id: "AUTH.INPUT.EMAIL",
+                        })}
+                        type="email"
+                        placeholder={this.props.intl.formatMessage({
+                          id: "AUTH.INPUT.EMAIL",
+                        })}
+                      />
+
+                      <Field
+                        autoComplete="current-password"
+                        name="password"
+                        component={InputField}
+                        label={this.props.intl.formatMessage({
+                          id: "AUTH.INPUT.PASSWORD",
+                        })}
+                        type="password"
+                        placeholder={this.props.intl.formatMessage({
+                          id: "AUTH.INPUT.PASSWORD",
+                        })}
+                      />
+
+                      <div>
+                        <button type="submit">
+                          <span>
+                            <FormattedMessage id="AUTH.GENERAL.SUBMIT_BUTTON" />
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </Form>
+                )}
+
+                {mfaRequired && (
+                  <Form onSubmit={handleSubmit(this.onFormSubmit.bind(this))}>
+                    <div>
+                      <Field
+                        name="code"
+                        component={InputField}
+                        label={this.props.intl.formatMessage({
+                          id: "SERVICE.AUTH.VERIFICATION_CODE",
+                        })}
+                        type="text"
+                        placeholder={this.props.intl.formatMessage({
+                          id: "SERVICE.AUTH.VERIFICATION_CODE",
+                        })}
+                      />
+                      <div>
+                        <button type="submit">
+                          <span>
+                            <FormattedMessage id="SERVICE.AUTH.VERIFY" />
+                          </span>
+                        </button>
+
+                        {resendCode && (
+                          <button type="submit">
+                            <span>
+                              <FormattedMessage id="SERVICE.AUTH.RESEND_CODE" />
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </Form>
                 )}
               </div>
-
             </div>
-          </Form>
-        )}
-      </div>
+            {/* End .container */}
+          </main>
+
+
     );
   }
 }
 
+// Redux-form validation
 function validate(formProps) {
   const errors = {};
 
@@ -235,14 +251,13 @@ Register.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.string),
 };
 
-// Reference: https://redux-form.com/7.2.3/docs/faq/howtoconnect.md/
 function mapStateToProps(state, ownProps) {
   return {
-    authenticated: state.auth.authenticated,
-    errorMessage: state.auth.error,
-    mfaRequired: state.auth.mfa,
-    cognitoUser: state.auth.cognitoUser,
-    resendCode: state.auth.resendCode,
+    authenticated: state.auth.authReducer.authenticated,
+    errorMessage: state.auth.authReducer.error,
+    mfaRequired: state.auth.authReducer.mfa,
+    cognitoUser: state.auth.authReducer.cognitoUser,
+    resendCode: state.auth.authReducer.resendCode
   };
 }
 
@@ -262,8 +277,10 @@ function mapDispatchToProps(dispatch) {
 
 Register = connect(mapStateToProps, mapDispatchToProps)(Register);
 
-export default injectIntl(reduxForm({
-  form: "loginForm",
-  fields: ["username", "password", "email", "phone", "code"],
-  validate,
-})(Register));
+export default injectIntl(
+  reduxForm({
+    form: "loginForm",
+    fields: ["username", "password", "email", "phone", "code"],
+    validate,
+  })(Register)
+);

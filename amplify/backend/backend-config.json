@@ -18,6 +18,25 @@
           ]
         }
       ]
+    },
+    "vuvuyVies": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "vuvuyViesLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "vuvuyViesLayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "auth": {
@@ -94,6 +113,27 @@
           ]
         }
       }
+    },
+    "vuvuyVies": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "vuvuyVies",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    }
+  },
+  "hosting": {
+    "amplifyhosting": {
+      "service": "amplifyhosting",
+      "providerPlugin": "awscloudformation",
+      "type": "manual"
     }
   }
 }

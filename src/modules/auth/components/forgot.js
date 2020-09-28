@@ -8,7 +8,7 @@ import { InputField } from '../partials/form_controls';
 import PropTypes from 'prop-types';
 import {
   forgotPassword as forgotPasswordAction,
-  confirmForgotPassword as confirmForgotPasswordAction } from '../redux/actions/authActions';
+  confirmForgotPassword as confirmForgotPasswordAction } from './authActions';
 import { FormattedMessage, injectIntl } from "react-intl";
 
 class forgot extends Component {

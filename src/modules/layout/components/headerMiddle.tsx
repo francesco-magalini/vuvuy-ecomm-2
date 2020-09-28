@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 export default function headerMiddle() {
     return (
@@ -68,11 +69,12 @@ export default function headerMiddle() {
               <a href="/">box</a>
               <a href="/">smart</a>
               <a href="/">portable</a>
+              <Link to="/debug">debug</Link>
             </div>
           </div>
           {/* End .headeer-center */}
           <div className="header-right">
-            <a href="login">
+            <Link to="/account">
               <div className="header-user">
                 <i className="icon-user-2" />
                 <div className="header-userinfo">
@@ -80,7 +82,7 @@ export default function headerMiddle() {
                   <h4>My Account</h4>
                 </div>
               </div>
-            </a>
+            </Link>
             <a href="/" className="porto-icon">
               <i className="icon icon-heart" />
             </a>

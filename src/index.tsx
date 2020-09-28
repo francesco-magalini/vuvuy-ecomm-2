@@ -16,22 +16,27 @@ import awsExports from "./aws-exports";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
-//i18n
+//Providers
 import { I18nProvider } from "./modules/i18n/components/i18nProvider";
+import LayoutProvider from "./modules/layout/components/LayoutProvider";
+
+//React Router
+import { BrowserRouter as Router } from "react-router-dom";
 
 Amplify.configure(awsExports);
 
 //
 //const { PUBLIC_URL } = process.env;
-
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <Router>
       <I18nProvider>
-        <App />
+        <LayoutProvider>
+          <App />
+        </LayoutProvider>
       </I18nProvider>
-    </Provider>
-  </React.StrictMode>,
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 

@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/checkVatService",
+            "lambdaFunction": "vuvuyVies",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/checkVatService"
+        }
+    ],
+    "resourceName": "vuvuyVies",
+    "apiName": "vuvuyVies",
+    "functionArns": [
+        {
+            "lambdaFunction": "vuvuyVies"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-vuvuyecomm2-dev-212006-authRole",
+        "unAuthRoleName": "amplify-vuvuyecomm2-dev-212006-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "vuvuyVies",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

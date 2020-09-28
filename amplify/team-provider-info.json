@@ -15,12 +15,42 @@
       "function": {
         "vuvuyecomm2PostConfirmation": {
           "GROUP": "Users"
+        },
+        "vuvuyViesLayer": {
+          "deploymentBucketName": "amplify-vuvuyecomm2-dev-212006-deployment",
+          "s3Key": "amplify-builds/vuvuyViesLayer-build.zip"
         }
       },
       "auth": {
         "vuvuyecomm2": {
           "facebookAppId": "123",
           "googleClientId": "123"
+        },
+        "userPoolGroups": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d21czbo4ordh0d",
+          "type": "manual"
+        }
+      }
+    },
+    "nonCFNdata": {
+      "function": {
+        "vuvuyViesLayer": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "public"
+                },
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "msm0B4VypU14LkCiSmcnH1qe2V75H4DLUQOQQRw2CPY="
+            }
+          }
         }
       }
     }

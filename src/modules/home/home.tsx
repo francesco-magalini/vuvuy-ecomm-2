@@ -11,42 +11,26 @@ import recommendedProducts from "./recommendedProducts";
 import topBrands from "./topBrands";
 import mostViewed from "./mostViewed";
 import topCarouselReactSlick from "./topCarouselReactSlick";
-import Header from "../layout/header";
-import Footer from "../layout/footer";
 
 export default function home() {
   return (
-    <>
-      <div className="App">
-        <div className="page-wrapper">
-          <Header />
-
-          <main className="main home">
-            <div className="container">
-              {topCarouselReactSlick()}
-              {conditions()}
-              {mostViewed()}
-              {categoryPromo()}
-              {topCategories()}
-            </div>
-            {bestSellers()}
-            <div className="container">
-              {recentlyViewed()}
-              {newArrivals()}
-              {detailCategoryElectronics()}
-              {detailCategoryMobiles()}
-              {recommendedProducts()}
-            </div>
-            {topBrands()}
-          </main>
-
-          <Footer />
-        </div>
-
-
-
+    <main className="main home">
+      <div className="container">
+        {topCarouselReactSlick()}
+        {conditions()}
+        {mostViewed()}
+        {categoryPromo()}
+        {topCategories()}
       </div>
-
-    </>
+      {bestSellers()}
+      <div className="container">
+        {recentlyViewed()}
+        {newArrivals()}
+        {detailCategoryElectronics()}
+        {detailCategoryMobiles()}
+        {recommendedProducts()}
+      </div>
+      {topBrands()}
+    </main>
   );
 }

@@ -2,22 +2,19 @@ import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
-import { Segment, Form, Icon, Button, Label } from "semantic-ui-react";
+import { Segment, Form, Button, Label } from "semantic-ui-react";
 import { InputField } from "../components/form_controls";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FormattedMessage, injectIntl } from "react-intl";
-import Header from "../../layout/header";
-import Footer from "../../layout/footer";
 
 import {
   login as loginAction,
   confirmLogin as confirmLoginAction,
   setNewPassword as setPasswordAction,
-} from "../redux/actions/authActions";
-
-import { AUTH_ERROR_CLEAR } from "../redux/types/types";
+} from "./authActions";
 import store from "../../../redux/store";
+import { AUTH_ERROR_CLEAR } from "../redux/types/types";
 
 class Login extends Component {
   constructor(props) {
@@ -31,7 +28,6 @@ class Login extends Component {
       if (counter === 0) {
         clearInterval(seconds);
         // dispatch INIT_STATE
-
         store.dispatch({ type: AUTH_ERROR_CLEAR });
       }
       counter = counter - 1;
@@ -80,12 +76,11 @@ class Login extends Component {
       resendCode,
       fields: { username, password, newPassword, newPasswordConfirm, code }, // eslint-disable-line
     } = this.props;
+
     const invalidCredentialsMessage = this.renderAlert();
 
     return (
-      <div className="App">
-        <div className="page-wrapper">
-          <Header />
+
 
           <main className="main">
             <nav aria-label="breadcrumb" className="breadcrumb-nav">
@@ -105,7 +100,9 @@ class Login extends Component {
             </nav>
             <div className="page-header">
               <div className="container">
-                <h1>Login and Create Account</h1>
+                <h1>
+                  <FormattedMessage id="AUTH.LOGIN.TITLE" />
+                </h1>
               </div>
               {/* End .container */}
             </div>
@@ -129,9 +126,7 @@ class Login extends Component {
                     role="alert"
                     className="mb-10 alert alert-custom alert-light-info alert-dismissible"
                   >
-                    <div className="alert-text ">
-                      {invalidCredentialsMessage}
-                    </div>
+                    <div>{invalidCredentialsMessage}</div>
                   </div>
                 )}
 
@@ -142,49 +137,41 @@ class Login extends Component {
                         onSubmit={handleSubmit(this.onFormSubmit.bind(this))}
                         className="form"
                       >
-                        <div className="form-group row">
-                          <div className="col-12">
-                            <Field
-                              name="username"
-                              component={InputField}
-                              className="form-control form-control-solid h-auto py-5 px-6"
-                              label={this.props.intl.formatMessage({
-                                id: "AUTH.INPUT.EMAIL",
-                              })}
-                              type="text"
-                              placeholder={this.props.intl.formatMessage({
-                                id: "AUTH.INPUT.EMAIL",
-                              })}
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          autoComplete="username"
+                          name="username"
+                          component={InputField}
+                          label={this.props.intl.formatMessage({
+                            id: "AUTH.INPUT.EMAIL",
+                          })}
+                          type="email"
+                          placeholder={this.props.intl.formatMessage({
+                            id: "AUTH.INPUT.EMAIL",
+                          })}
+                        />
 
-                        <div className="form-group row">
-                          <div className="col-12">
-                            <Field
-                              name="password"
-                              component={InputField}
-                              className="form-control form-control-solid h-auto py-5 px-6"
-                              label={this.props.intl.formatMessage({
-                                id: "AUTH.INPUT.PASSWORD",
-                              })}
-                              type="password"
-                              placeholder={this.props.intl.formatMessage({
-                                id: "AUTH.INPUT.PASSWORD",
-                              })}
-                            />
-                          </div>
-                        </div>
+                        <Field
+                          autoComplete="current-password"
+                          name="password"
+                          component={InputField}
+                          label={this.props.intl.formatMessage({
+                            id: "AUTH.INPUT.PASSWORD",
+                          })}
+                          type="password"
+                          placeholder={this.props.intl.formatMessage({
+                            id: "AUTH.INPUT.PASSWORD",
+                          })}
+                        />
 
-                        <div className="form-group">
-                          <div className="form-group d-flex flex-wrap justify-content-between align-items-center">
+                        <div>
+                          <div>
                             <Link to="/auth/forget">
                               <FormattedMessage id="AUTH.FORGOT.TITLE" />
                             </Link>
                           </div>
                         </div>
 
-                        <Segment clearing className="button-holder-segment">
+                        <Segment>
                           <Form.Field
                             control={Button}
                             compact
@@ -195,7 +182,7 @@ class Login extends Component {
                             <FormattedMessage id="AUTH.LOGIN.BUTTON" />
                           </Form.Field>
                           <Link to="/register">
-                            <Button compact floated="right">
+                            <Button>
                               <FormattedMessage id="AUTH.GENERAL.SIGNUP_BUTTON" />
                             </Button>
                           </Link>
@@ -207,10 +194,9 @@ class Login extends Component {
                       <Form
                         onSubmit={handleSubmit(this.onFormSubmit.bind(this))}
                       >
-                        <div className="form-group d-flex flex-wrap flex-center">
+                        <div>
                           <Field
                             name="newPassword"
-                
                             component={InputField}
                             label={this.props.intl.formatMessage({
                               id: "SERVICE.AUTH.NEW_PASSWORD",
@@ -223,7 +209,6 @@ class Login extends Component {
                           <Field
                             name="newPasswordConfirm"
                             component={InputField}
-                   
                             label={this.props.intl.formatMessage({
                               id: "SERVICE.AUTH.REPEAT_NEW_PASSWORD",
                             })}
@@ -240,16 +225,15 @@ class Login extends Component {
                             )}
                           </div>
                         </div>
-                        <div className="button-holder">
-                          <Segment clearing className="button-holder-segment">
+                        <div>
+                          <Segment>
                             <Form.Field
                               control={Button}
                               compact
-            
                               floated="left"
                               type="submit"
                             >
-                            <FormattedMessage id="SERVICE.AUTH.CHANGE_PASSWORD" />
+                              <FormattedMessage id="SERVICE.AUTH.CHANGE_PASSWORD" />
                             </Form.Field>
                           </Segment>
                         </div>
@@ -261,30 +245,24 @@ class Login extends Component {
                 {mfaRequired && (
                   <div className="login-page">
                     <Form onSubmit={handleSubmit(this.onFormSubmit.bind(this))}>
-                      <div className="fill-in">
+                      <div>
                         <Field
                           name="code"
                           component={InputField}
-                          label={{
-                            content: (
-                              <Icon color="orange" name="lock" size="large" />
-                            ),
-                          }}
-                          labelPosition="left"
                           type="text"
                           placeholder={this.props.intl.formatMessage({
                             id: "SERVICE.AUTH.VERIFICATION_CODE",
                           })}
                         />
-                        <div className="error-message">
+                        <div>
                           {invalidCredentialsMessage && (
                             <Label basic color="red" pointing="above">
                               {invalidCredentialsMessage}
                             </Label>
                           )}
                         </div>
-                        <div className="button-holder">
-                          <Segment clearing className="button-holder-segment">
+                        <div>
+                          <Segment>
                             <Form.Field
                               control={Button}
                               compact
@@ -298,7 +276,6 @@ class Login extends Component {
                               <Form.Field
                                 control={Button}
                                 compact
-                                className="resend-code-button"
                                 floated="left"
                                 type="submit"
                               >
@@ -316,9 +293,6 @@ class Login extends Component {
             {/* End .container */}
           </main>
 
-          <Footer />
-        </div>
-      </div>
     );
   }
 }
@@ -353,12 +327,6 @@ Login.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.string),
 };
 
-// Lets connect props and dispatch to redux store.
-// 1. implement mapStateToProps() and mapDispatchToProps()
-// 2. connect() methods above to redux store
-// 3. finally, connect reduxForm
-// Reference: https://redux-form.com/7.2.3/docs/faq/howtoconnect.md/
-
 function mapStateToProps(state, ownProps) {
   return {
     errorMessage: state.auth.error,
@@ -369,10 +337,6 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  // return {
-  //   ...bindActionCreators(actionCreators, dispatch),
-  //   dispatch
-  // };
   return {
     ...bindActionCreators(
       {
