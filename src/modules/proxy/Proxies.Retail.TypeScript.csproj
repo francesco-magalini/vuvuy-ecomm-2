@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\..\..\..\repo.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsTool>true</IsTool>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Dynamics.Proxies.Retail.TypeScript</RootNamespace>
+    <AssemblyName>Microsoft.Dynamics.Proxies.Retail.TypeScript</AssemblyName>
+    <TypeScriptOutFile>Libraries.Proxies.Retail.TypeScript.js</TypeScriptOutFile>
+    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptLibrariesOutDir>$(MsBuildThisFileDirectory)</TypeScriptLibrariesOutDir>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSource>false</IncludeSource>
+    <IncludeSymbols>false</IncludeSymbols>
+    <PackageTags>Microsoft;Dynamics;Dynamics365;Proxies;Retail;TypeScript</PackageTags>
+    <Description>The Type Script Proxy generated files for Retail client components.</Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Dynamics.Commerce.Tools.CoreProxyGenerator" Version="$(ToolsRepoPackagesVersion)">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Dynamics.Retail.Build.Product.MSBuild" Version="$(ToolsRepoPackagesVersion)">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="2.2.2" />
+  </ItemGroup>
+  
+    <ItemGroup>
+    <TypeScriptCompile Include="AsyncResult.ts" />
+    <TypeScriptCompile Include="CommerceContext.g.ts" />
+    <TypeScriptCompile Include="DataServiceQuery.ts" />
+    <TypeScriptCompile Include="Entities\CommerceTypes.g.ts" />
+    <TypeScriptCompile Include="Exceptions\ErrorHelper.ts" />
+    <TypeScriptCompile Include="Exceptions\ErrorParser.ts" />
+    <TypeScriptCompile Include="Exceptions\NotificationHandler.ts" />
+    <TypeScriptCompile Include="Exceptions\ProxyError.ts" />
+    <TypeScriptCompile Include="Extensions\ArrayExtensions.ts" />
+    <TypeScriptCompile Include="Extensions\ObjectExtensions.ts" />
+    <TypeScriptCompile Include="Extensions\StringExtensions.ts" />
+    <TypeScriptCompile Include="FunctionQueueHelper.ts" />
+    <TypeScriptCompile Include="Interfaces\IAsyncResult.ts" />
+    <TypeScriptCompile Include="Interfaces\IDataServiceRequest.ts" />
+    <TypeScriptCompile Include="Interfaces\IDataServiceRequestFactory.ts" />
+    <TypeScriptCompile Include="Interfaces\IManagerFactory.ts" />
+    <TypeScriptCompile Include="Interfaces\IManagers.g.ts" />
+    <TypeScriptCompile Include="Managers\ManagerFactory.ts" />
+    <TypeScriptCompile Include="Managers\Managers.g.ts" />
+    <TypeScriptCompile Include="RetailLogger.ts" />
+    <TypeScriptCompile Include="DataServiceRequest.ts" />
+    <TypeScriptCompile Include="RetailServerRequestFactory.ts" />
+    <TypeScriptCompile Include="Tracer.ts" />
+    <TypeScriptCompile Include="XhrHelper.ts" />
+  </ItemGroup>
+  <ItemGroup Label="Libraries">
+    <TypeScriptLibraries Include="..\..\..\..\..\..\external\TypeScript\Diagnostics.TypeScriptCore.d.ts" />
+    <TypeScriptLibraries Include="..\..\..\..\..\..\external\TypeScript\DataJS.d.ts" />
+    <TypeScriptLibraries Include="..\..\..\..\..\..\external\TypeScript\JQuery.d.ts" />
+    <TypeScriptLibraries Include="..\..\..\..\..\..\external\TypeScript\KnockoutJS.d.ts" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Clean Include="$(MSBuildProjectDirectory)\Entities\CommerceTypes.g.ts;$(MSBuildProjectDirectory)\CommerceContext.g.ts;$(MSBuildProjectDirectory)\Interfaces\IManagers.g.ts;$(MSBuildProjectDirectory)\Managers\Managers.g.ts" />
+  </ItemGroup>
+
+  <Target Name="SetCommerceProxyGeneratorProperties" BeforeTargets="SetGeneratedProxyFiles">
+    <PropertyGroup>
+      <CommerceProxyGeneratorApplicationType>TypeScript</CommerceProxyGeneratorApplicationType>
+      <RetailServerLibraryPathForProxyGeneration>..\..\..\..\Services\Web\RetailServer\Core\bin\$(Configuration)\net461\Microsoft.Dynamics.Retail.RetailServerLibrary.dll</RetailServerLibraryPathForProxyGeneration>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CopyTypeScriptLibraries" BeforeTargets="PreComputeCompileTypeScript;">
+    <Copy SourceFiles="%(TypeScriptLibraries.Identity)" DestinationFiles="$(TypeScriptLibrariesOutDir)%(TypeScriptLibraries.FileName)%(TypeScriptLibraries.Extension)" SkipUnchangedFiles="true" Condition="Exists('%(TypeScriptLibraries.Identity)')" />
+  </Target>
+
+</Project>
